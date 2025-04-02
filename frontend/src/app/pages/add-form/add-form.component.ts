@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./add-form.component.scss']
 })
 export class AddFormComponent {
-
+  selectedSymbol: string = '';
 }
