@@ -9,6 +9,8 @@ import { FooterComponent } from './shared/footer/footer.component';
 import { HomeListingComponent } from './pages/home-listing/home-listing.component';
 import { AddFormComponent } from './pages/add-form/add-form.component';
 import { EditFormComponent } from './pages/edit-form/edit-form.component';
+import { DonateNowComponent } from './pages/donate-now/donate-now.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -17,12 +19,14 @@ import { EditFormComponent } from './pages/edit-form/edit-form.component';
     FooterComponent,
     HomeListingComponent,
     AddFormComponent,
-    EditFormComponent
+    EditFormComponent,
+    DonateNowComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    NgbModule
+    NgbModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
