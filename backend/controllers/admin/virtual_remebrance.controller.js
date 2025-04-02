@@ -33,7 +33,7 @@ const createRmembrance = async function (req, res) {
     const data = await VertualRem.create({
       first_name:body.first_name,
       last_name:body.last_name,
-      first_name1:body.first_name1,
+      email:body.email,
       tribute_memory:body.tribute_memory,
       tribute_message:body.tribute_message,
       regiment:body.regiment,
