@@ -7,4 +7,12 @@ import { Component } from '@angular/core';
 })
 export class HeaderComponent {
   isMenuCollapsed = true;
+
+  gotoTop() {
+    window.scroll({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
+  }
 }

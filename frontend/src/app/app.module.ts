@@ -10,7 +10,8 @@ import { HomeListingComponent } from './pages/home-listing/home-listing.componen
 import { AddFormComponent } from './pages/add-form/add-form.component';
 import { EditFormComponent } from './pages/edit-form/edit-form.component';
 import { DonateNowComponent } from './pages/donate-now/donate-now.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,9 @@ import { FormsModule } from '@angular/forms';
     BrowserModule,
     AppRoutingModule,
     NgbModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

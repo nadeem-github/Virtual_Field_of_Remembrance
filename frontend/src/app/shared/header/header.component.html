@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-md shadow sticky-top bg-white">
     <div class="container">
-        <a class="navbar-brand" [routerLink]="'home'" (click)="isMenuCollapsed = true">
+        <a class="navbar-brand" [routerLink]="'./home'" (click)="isMenuCollapsed = true; gotoTop()">
             <img src="../../../assets/images/logo.webp" class="img-fluid" width="200" alt="">
         </a>
 
@@ -13,14 +13,14 @@
 				</li> -->
             </ul>
             <form class="d-flex">
-                <a href="https://familiesofveterans.org.au/" target="_blank" class="btn btn-outline-success rounded-1" (click)="isMenuCollapsed = true">
+                <a href="https://familiesofveterans.org.au/" target="_blank" class="btn btn-outline-success rounded-1" (click)="isMenuCollapsed = true; gotoTop()">
                     Home
                 </a>
-                <button class="btn btn-danger mx-2 rounded-1" type="button" [routerLink]="'addNew'" (click)="isMenuCollapsed = true">
+                <button class="btn btn-danger mx-2 rounded-1" type="button" [routerLink]="'./addNew'" (click)="isMenuCollapsed = true; gotoTop()">
                     <i class="fa fa-plus me-1" aria-hidden="true"></i>
                     <span>Add Tribute</span>
                 </button>
-                <button class="btn btn-warning rounded-1" type="button" [routerLink]="'donateNow'" (click)="isMenuCollapsed = true">
+                <button class="btn btn-warning rounded-1" type="button" [routerLink]="'./donateNow'" (click)="isMenuCollapsed = true; gotoTop()">
                     Donate Now
                 </button>
             </form>

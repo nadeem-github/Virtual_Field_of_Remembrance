@@ -15,7 +15,7 @@
         </div>
         <div class="row">
             <div class="col-xxl-10 col-xl-10 col-lg-10 col-md-12 col-sm-12 mx-auto">
-                <form>
+                <form [formGroup]="remembranceForm" (ngSubmit)="onSubmit()">
                     <div class="card rounded-1 mb-3 bg-body-tertiary">
                         <div class="card-header text-center">
                             <p class="cardHeading mb-0">Your details</p>
@@ -23,15 +23,15 @@
                         <div class="card-body">
                             <div class="mb-3">
                                 <label class="form-label mb-1">First Name</label>
-                                <input type="text" class="form-control rounded-1 shadow-none" placeholder="enter your first name" name="firstName">
+                                <input type="text" class="form-control rounded-1 shadow-none" formControlName="firstName" placeholder="Enter your first name">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label mb-1">Surname</label>
-                                <input type="text" class="form-control rounded-1 shadow-none" placeholder="enter your Surname" name="surname">
+                                <input type="text" class="form-control rounded-1 shadow-none" formControlName="surname" placeholder="Enter your surname">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label mb-1">Email</label>
-                                <input type="email" class="form-control rounded-1 shadow-none" placeholder="enter your email" name="email">
+                                <input type="email" class="form-control rounded-1 shadow-none" formControlName="email" placeholder="Enter your email">
                             </div>
                         </div>
                     </div>
@@ -41,16 +41,16 @@
                         </div>
                         <div class="card-body">
                             <div class="mb-3">
-                                <label class="form-label mb-1">If you are leaving the tribute in memory of someone please enter their name here (optional):</label>
-                                <input type="text" class="form-control rounded-1 shadow-none" placeholder="enter your their name" name="theirName">
+                                <label class="form-label mb-1">Tribute Name (Optional)</label>
+                                <input type="text" class="form-control rounded-1 shadow-none" formControlName="theirName" placeholder="Enter their name">
                             </div>
                             <div class="mb-3">
-                                <label class="form-label mb-1">Please enter tribute message (100 character limit)</label>
-                                <input type="text" class="form-control rounded-1 shadow-none" placeholder="enter your tribute message" name="tributeMessage">
+                                <label class="form-label mb-1">Tribute Message (100 character limit)</label>
+                                <input type="text" class="form-control rounded-1 shadow-none" formControlName="tributeMessage" placeholder="Enter your tribute message">
                             </div>
                             <div class="mb-3">
-                                <label class="form-label mb-1">Please enter the Regiment/Service or simply ‘the Fallen’ if you do not have a specific Regiment in mind.</label>
-                                <input type="email" class="form-control rounded-1 shadow-none" placeholder="enter your regiment/service or simply" name="regimentService">
+                                <label class="form-label mb-1">Regiment/Service</label>
+                                <input type="text" class="form-control rounded-1 shadow-none" formControlName="regimentService" placeholder="Enter your regiment/service">
                             </div>
                         </div>
                     </div>
@@ -62,39 +62,34 @@
                         <div class="card-body">
                             <div class="bg-white rounded-4 p-5 mb-4">
                                 <div class="d-flex align-items-center">
-                                    <div [ngClass]="{'img-thumbnail shadow-sm': selectedSymbol === 'poppy'}">
+                                    <div [ngClass]="{'img-thumbnail shadow-sm': remembranceForm.value.remembranceSymbol === 'poppy'}" (click)="selectSymbol('poppy')">
                                         <img src="assets/images/poppy.png" width="50" class="img-fluid" alt="poppy">
                                     </div>
-                                    <div [ngClass]="{'img-thumbnail shadow-sm': selectedSymbol === 'wattle'}" class="mx-3">
+                                    <div [ngClass]="{'img-thumbnail shadow-sm': remembranceForm.value.remembranceSymbol === 'wattle'}" class="mx-3" (click)="selectSymbol('wattle')">
                                         <img src="assets/images/wattle.png" width="50" class="img-fluid" alt="wattle">
                                     </div>
-                                    <div [ngClass]="{'img-thumbnail shadow-sm': selectedSymbol === 'rosemary'}">
+                                    <div [ngClass]="{'img-thumbnail shadow-sm': remembranceForm.value.remembranceSymbol === 'rosemary'}" (click)="selectSymbol('rosemary')">
                                         <img src="assets/images/rosemary.png" width="50" class="img-fluid" alt="rosemary">
                                     </div>
                                 </div>
                             
                                 <div class="mt-3">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="remembranceSymbol" id="poppy" value="poppy" [(ngModel)]="selectedSymbol">
-                                        <label class="form-check-label" for="poppy">Poppy</label>
+                                        <input class="form-check-input" type="radio" formControlName="remembranceSymbol" value="poppy" (change)="onRadioChange($event)">
+                                        <label class="form-check-label">Poppy</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="remembranceSymbol" id="wattle" value="wattle" [(ngModel)]="selectedSymbol">
-                                        <label class="form-check-label" for="wattle">Wattle</label>
+                                        <input class="form-check-input" type="radio" formControlName="remembranceSymbol" value="wattle" (change)="onRadioChange($event)">
+                                        <label class="form-check-label">Wattle</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="remembranceSymbol" id="rosemary" value="rosemary" [(ngModel)]="selectedSymbol">
-                                        <label class="form-check-label" for="rosemary">Rosemary</label>
+                                        <input class="form-check-input" type="radio" formControlName="remembranceSymbol" value="rosemary" (change)="onRadioChange($event)">
+                                        <label class="form-check-label">Rosemary</label>
                                     </div>
-                                    <p class="my-4">Support our veterans this Remembrance.</p>
-                                    <button type="button" class="btn btn-warning border-0 btnCustom px-3 py-2 text-white fw-semibold rounded-pill">
-                                        Click here to purchase cross
-                                    </button>
                                 </div>
                             </div>
-                            
                             <p>
-                            Families of Veterans Guild has been dedicated to supporting veteran families, war widows, and those impacted by defence service across Australia. This Virtual Field of Remembrance is a space to honour and remember the lives and sacrifices of those who served—and the families who stood beside them.
+                                Families of Veterans Guild has been dedicated to supporting veteran families, war widows, and those impacted by defence service across Australia. This Virtual Field of Remembrance is a space to honour and remember the lives and sacrifices of those who served—and the families who stood beside them.
                             </p>
                             <p>
                                 Your support helps us continue to provide connection, advocacy, and wellbeing programs to those navigating life after service.
@@ -103,9 +98,7 @@
                                 Thank you for remembering with us.
                             </p>
                             <div class="text-end">
-                                <button class="btn btn-warning border-0 btnCustom px-5 py-2 text-white fw-semibold rounded-pill">
-                                    Send
-                                </button>
+                                <button class="btn btn-warning border-0 btnCustom px-5 py-2 text-white fw-semibold rounded-pill">Send</button>
                             </div>
                         </div>
                     </div>
@@ -113,5 +106,8 @@
             </div>
         </div>
     </div>
-
+    <ngb-toast *ngIf="showToast" [autohide]="false" [delay]="3000" class="bg-success text-white position-fixed">
+        Form submitted successfully!
+    </ngb-toast>
+  
 </section>

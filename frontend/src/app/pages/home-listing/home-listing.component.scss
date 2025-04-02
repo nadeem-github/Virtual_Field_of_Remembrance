@@ -1,0 +1,31 @@
+.remembrance-img {
+    cursor: pointer;
+    width: 50px;
+    border-radius: 8px;
+    margin: 10px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.remembrance-img:hover {
+    transform: scale(1.1);
+}
+
+.remembrance-details {
+    width: 300px; /* Adjust width as needed */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
+section {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background: url('../../../assets/images/drag_bg.jpg') no-repeat center center/cover;
+    cursor: grab;
+
+    &:active {
+        cursor: grabbing;
+    }
+}
