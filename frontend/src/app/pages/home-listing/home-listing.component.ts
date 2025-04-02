@@ -29,6 +29,7 @@ export class HomeListingComponent {
     this.virtualFielsService.getRemembrances(this.requestData).subscribe(response => {
       if (response.success) {
         this.remembrances = response.data;
+        console.log(this.remembrances);
       }
     });
   }
@@ -36,47 +37,5 @@ export class HomeListingComponent {
   // Toggle Details on Image Click
   toggleDetails(remembrance: any): void {
     this.selectedRemembrance = this.selectedRemembrance === remembrance ? null : remembrance;
-  }
-
-  ngAfterViewInit(): void {
-    this.makeBackgroundDraggable();
-  }
-
-  makeBackgroundDraggable() {
-    const section = document.getElementById('draggable-section');
-    let isDragging = false;
-    let startX = 0, startY = 0, scrollLeft = 0, scrollTop = 0;
-
-    if (section) {
-      section.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        startX = e.pageX - section.offsetLeft;
-        startY = e.pageY - section.offsetTop;
-        scrollLeft = section.scrollLeft;
-        scrollTop = section.scrollTop;
-        section.style.cursor = 'grabbing';
-      });
-
-      section.addEventListener('mouseleave', () => {
-        isDragging = false;
-        section.style.cursor = 'grab';
-      });
-
-      section.addEventListener('mouseup', () => {
-        isDragging = false;
-        section.style.cursor = 'grab';
-      });
-
-      section.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        e.preventDefault();
-        const x = e.pageX - section.offsetLeft;
-        const y = e.pageY - section.offsetTop;
-        const walkX = x - startX;
-        const walkY = y - startY;
-        section.scrollLeft = scrollLeft - walkX;
-        section.scrollTop = scrollTop - walkY;
-      });
-    }
   }
 }

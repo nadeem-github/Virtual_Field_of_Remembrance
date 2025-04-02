@@ -4,16 +4,19 @@
             <div class="col-md-1 text-center" *ngFor="let remembrance of remembrances">
                 <img *ngIf="remembrance.rem_symbol" [src]="baseURL + remembrance.rem_symbol" alt="Remembrance Symbol" class="remembrance-img" (click)="toggleDetails(remembrance)">
                 
-                <div *ngIf="selectedRemembrance === remembrance" class="remembrance-details position-fixed bg-dark text-white p-3 rounded shadow z-10">
-                    <h5 class="text-truncate">{{ remembrance.first_name }} {{ remembrance.last_name }}</h5>
-                    <p class="text-truncate">Email: {{ remembrance.email }}</p>
-                    <p class="mb-0 text-truncate">Message: {{ remembrance.tribute_message }}</p>
+                <div *ngIf="selectedRemembrance === remembrance" class="remembrance-details position-fixed bg-dark text-white p-3 rounded shadow z-10 text-start">
+                    <h4 class="mb-0 mb-3">In memory of <b class="text-uppercase">{{ remembrance.tribute_memory }}</b></h4>
+                    <p class="mb-0 mb-3">
+                        {{ remembrance.tribute_message }}
+                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Totam, illum quo dicta minus quis aliquid adipisci, nostrum quisquam quod, officiis commodi dolore. Modi aperiam facere dignissimos id perferendis voluptates beatae.
+                    </p>
+                    <p class="mb-0">Submitted by: {{ remembrance.first_name }} {{ remembrance.last_name }}</p>
                 </div>
             </div>
         </div>
         
         <ng-template #noData>
-            <p class="text-center">No remembrances found.</p>
+            <p class="text-center text-white">No remembrances found.</p>
         </ng-template>
     </div>    
 </section>
