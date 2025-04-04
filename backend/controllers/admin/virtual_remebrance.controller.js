@@ -40,7 +40,7 @@ const createRmembrance = async function (req, res) {
       rem_symbol: relativePathRemSymbol,
     })
     if (data) {
-      return ReS(res, { data: data, message: "success." }, 200);
+      return ReS(res, { message: "success." }, 200);
     }
 
   } catch (error) {
@@ -51,13 +51,15 @@ const createRmembrance = async function (req, res) {
 const fetchRmembrance = async function (req, res) {
   try {
     const data = await VertualRem.findAll({
+      attributes: [
+         'first_name', 'last_name', 'email', 'tribute_memory', 'tribute_message', 'regiment', 'rem_symbol',
+      ],
       order: [['id', 'DESC']],
     });
-    const count = await VertualRem.count();
     if (!data) {
       return ReE(res, { message: "No Data Found" }, 200);
     }
-    return ReS(res, { data: data, message: "success", count });
+    return ReS(res, { data: data, message: "success"});
   } catch (error) {
     return ReE(res, { message: "Somthing Went Wrong", err: error }, 200);
   }
