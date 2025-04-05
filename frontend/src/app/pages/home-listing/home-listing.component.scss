@@ -1,20 +1,31 @@
 .remembrance-img {
     cursor: pointer;
     width: 50px;
-    border-radius: 8px;
-    margin: 10px;
     transition: transform 0.3s ease-in-out;
+    transform: scaleY(0.7); // 1 is normal, 0.8 is slightly flattened
+    transform-origin: center;
 }
 
 .remembrance-img:hover {
-    transform: scale(1.1);
+    transform: scale(0.8);
 }
 
 .remembrance-details {
-    width: 30%; /* Adjust width as needed */
+    width: 30%;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.725);
+}
+
+.crosStyle {
+    &:nth-child(even) {
+        text-align: center;
+    }
+
+    &:nth-child(odd) {
+        text-align: right;
+    }
 }
 
 

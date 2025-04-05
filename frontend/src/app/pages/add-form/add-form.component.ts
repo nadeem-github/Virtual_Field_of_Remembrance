@@ -20,7 +20,7 @@ export class AddFormComponent {
       surname: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       theirName: [''],
-      tributeMessage: ['', [Validators.required, Validators.maxLength(100)]],
+      tributeMessage: ['', [Validators.required, Validators.maxLength(500)]],
       regimentService: ['', Validators.required],
       remembranceSymbol: ['', Validators.required],
       file: [null]
@@ -66,7 +66,8 @@ export class AddFormComponent {
             this.showToast = true;
             setTimeout(() => {
               this.router.navigate(['/home']);
-            }, 3000);
+              window.scroll({ top: 0, left: 0, behavior: 'smooth'});
+            }, 2000);
             this.remembranceForm.reset();
           }
         },
