@@ -1,8 +1,8 @@
 {
   "production": {
-    "username": "root",
-    "password": "",
-    "database": "remembrance_db",
+    "username": "familiesofvetera",
+    "password": "YA:71f4:gmlTM0",
+    "database": "familiesofvetera_remembrance_db",
     "host": "localhost",
     "port": 3306,
     "dialect": "mysql",
