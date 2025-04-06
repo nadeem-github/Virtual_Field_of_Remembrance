@@ -27,6 +27,9 @@ app.use('/storage', express.static(__dirname + '/storage'));
 app.get("/nodeapi", (_req, res) => {
   res.json({ message: "server working..." });
 });
+app.post("/fetch-remembrance", (_req, res) => {
+  res.json({ message: "fetch-remembrance..." });
+});
 
 //User Routes
 app.use("/api/admin", adminRouter);
