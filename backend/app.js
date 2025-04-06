@@ -20,14 +20,16 @@ app.use(cors());
 
 app.use('/storage', express.static(__dirname + '/storage'));
 
-//User Routes
-app.use("/api/admin", adminRouter);
+
 
 //ng serve --host 0.0.0.0 --port 4200
 // simple route
 app.get("/nodeapi", (_req, res) => {
   res.json({ message: "server working..." });
 });
+
+//User Routes
+app.use("/api/admin", adminRouter);
 
 const PORT = process.env.PORT || config["port"];
 let server = app.listen(PORT, () => {
