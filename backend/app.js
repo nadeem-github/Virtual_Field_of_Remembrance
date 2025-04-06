@@ -25,7 +25,7 @@ app.use("/api/admin", adminRouter);
 
 //ng serve --host 0.0.0.0 --port 4200
 // simple route
-app.get("/", (_req, res) => {
+app.get("/api", (_req, res) => {
   res.json({ message: "server working..." });
 });
 
