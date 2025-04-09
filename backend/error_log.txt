@@ -1,0 +1,1 @@
+[2025-04-07T14:33:03.649Z] Unhandled Rejection: SequelizeAccessDeniedError: Access denied for user 'familiesofvetera'@'localhost' (using password: YES)
