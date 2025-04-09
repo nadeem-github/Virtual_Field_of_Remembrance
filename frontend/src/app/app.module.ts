@@ -12,6 +12,7 @@ import { EditFormComponent } from './pages/edit-form/edit-form.component';
 import { DonateNowComponent } from './pages/donate-now/donate-now.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { BuyWoodenCrossComponent } from './pages/buy-wooden-cross/buy-wooden-cross.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { HttpClientModule } from '@angular/common/http';
     HomeListingComponent,
     AddFormComponent,
     EditFormComponent,
-    DonateNowComponent
+    DonateNowComponent,
+    BuyWoodenCrossComponent
   ],
   imports: [
     BrowserModule,

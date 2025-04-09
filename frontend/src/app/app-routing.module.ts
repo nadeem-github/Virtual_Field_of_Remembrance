@@ -4,6 +4,7 @@ import { HomeListingComponent } from './pages/home-listing/home-listing.componen
 import { AddFormComponent } from './pages/add-form/add-form.component';
 import { EditFormComponent } from './pages/edit-form/edit-form.component';
 import { DonateNowComponent } from './pages/donate-now/donate-now.component';
+import { BuyWoodenCrossComponent } from './pages/buy-wooden-cross/buy-wooden-cross.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full', },
@@ -11,6 +12,7 @@ const routes: Routes = [
   { path: 'addNew', component: AddFormComponent },
   { path: 'edit', component: EditFormComponent },
   { path: 'donateNow', component: DonateNowComponent },
+  { path: 'buyWoodenCross', component: BuyWoodenCrossComponent },
 ];
 
 @NgModule({
