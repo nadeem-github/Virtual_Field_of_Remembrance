@@ -18,7 +18,7 @@ export class AddFormComponent {
     this.remembranceForm = this.fb.group({
       firstName: ['', Validators.required],
       surname: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.email]],
       theirName: [''],
       tributeMessage: ['', [Validators.required, Validators.maxLength(500)]],
       regimentService: ['', Validators.required],
