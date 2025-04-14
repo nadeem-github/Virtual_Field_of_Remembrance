@@ -19,10 +19,10 @@ export class AddFormComponent {
       firstName: ['', Validators.required],
       surname: ['', Validators.required],
       email: ['', [Validators.email]],
-      theirName: [''],
-      tributeMessage: ['', [Validators.required, Validators.maxLength(500)]],
-      regimentService: ['', Validators.required],
-      remembranceSymbol: ['', Validators.required],
+      theirName: ['', Validators.required],
+      tributeMessage: ['', [Validators.maxLength(500)]],
+      regimentService: ['',],
+      remembranceSymbol: ['',],
       file: [null]
     });
   }
