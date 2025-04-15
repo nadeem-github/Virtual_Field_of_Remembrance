@@ -21,16 +21,28 @@
                             <p class="cardHeading mb-0">Your details</p>
                         </div>
                         <div class="card-body">
-                            <div class="mb-3">
-                                <label class="form-label mb-1">First Name</label>
-                                <input type="text" class="form-control rounded-1 shadow-none" formControlName="firstName" placeholder="Enter your first name">
+                            <div class="mb-4 position-relative">
+                                <label class="form-label mb-1">
+                                    First Name<span class="text-danger">*</span>
+                                </label>
+                                <input type="text" class="form-control rounded-1 shadow-none" formControlName="firstName" placeholder="Enter your first name" />
+                                <div *ngIf="remembranceForm.get('firstName')?.touched && remembranceForm.get('firstName')?.invalid" class="text-danger small position-absolute">
+                                    First name is required.
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label mb-1">Surname</label>
-                                <input type="text" class="form-control rounded-1 shadow-none" formControlName="surname" placeholder="Enter your surname">
+                            
+                            <div class="mb-4 position-relative">
+                                <label class="form-label mb-1">
+                                    Last name<span class="text-danger">*</span>
+                                </label>
+                                <input type="text" class="form-control rounded-1 shadow-none" formControlName="surname" placeholder="Enter your surname" />
+                                <div *ngIf="remembranceForm.get('surname')?.touched && remembranceForm.get('surname')?.invalid" class="text-danger small position-absolute">
+                                    Last name is required.
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label mb-1">Email</label>
+                              
+                            <div>
+                                <label class="form-label mb-1">Email (optional)</label>
                                 <input type="email" class="form-control rounded-1 shadow-none" formControlName="email" placeholder="Enter your email">
                             </div>
                         </div>
@@ -40,16 +52,22 @@
                             <p class="cardHeading mb-0">Tribute</p>
                         </div>
                         <div class="card-body">
-                            <div class="mb-3">
-                                <label class="form-label mb-1">Tribute Name (Optional)</label>
-                                <input type="text" class="form-control rounded-1 shadow-none" formControlName="theirName" placeholder="Enter their name">
+                            <div class="mb-4 position-relative">
+                                <label class="form-label mb-1">
+                                    Tribute Name<span class="text-danger">*</span>
+                                </label>
+                                <input type="text" class="form-control rounded-1 shadow-none" formControlName="theirName" placeholder="Enter their name" />
+                                <div *ngIf="remembranceForm.get('theirName')?.touched && remembranceForm.get('theirName')?.invalid" class="text-danger small position-absolute">
+                                    Tribute name is required.
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label mb-1">Tribute Message (100 character limit)</label>
+                              
+                            <div class="mb-4">
+                                <label class="form-label mb-1">Tribute Message (optional) (100 character limit)</label>
                                 <input type="text" class="form-control rounded-1 shadow-none" formControlName="tributeMessage" placeholder="Enter your tribute message">
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label mb-1">Regiment/Service</label>
+                            <div>
+                                <label class="form-label mb-1">Service (optional)</label>
                                 <input type="text" class="form-control rounded-1 shadow-none" formControlName="regimentService" placeholder="Enter your regiment/service">
                             </div>
                         </div>
@@ -107,7 +125,9 @@
                                 Thank you for remembering with us.
                             </p>
                             <div class="text-end">
-                                <button class="btn btn-warning border-0 btnCustom px-5 py-2 text-white fw-semibold rounded-pill">Send</button>
+                                <button class="btn btn-warning border-0 btnCustom px-5 py-2 text-white fw-semibold rounded-pill" type="submit" [disabled]="remembranceForm.invalid">
+                                    Send
+                                </button>
                             </div>
                         </div>
                     </div>
