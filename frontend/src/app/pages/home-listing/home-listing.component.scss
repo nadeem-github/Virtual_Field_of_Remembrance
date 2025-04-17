@@ -2,11 +2,24 @@ section {
     position: relative;
     width: 100%;
     height: 100vh;
-    background: url('/assets/images/drag_bg.jpg') no-repeat center center/cover;
+    overflow: hidden;
+    cursor: grab;
+    background: #7f9f34;
 
     @media (max-width: 500px) {
         height: auto;
     }
+
+    &.dragging {
+        cursor: grabbing;
+    }
+}
+
+.noselect {
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
 }
 
 .remembrance-img {
@@ -40,6 +53,7 @@ section {
         border-left: 10px solid transparent;
         border-right: 10px solid transparent;
         border-bottom: 10px solid rgba(0, 0, 0, 0.9);
+
         @media (max-width: 500px) {
             display: none;
         }
