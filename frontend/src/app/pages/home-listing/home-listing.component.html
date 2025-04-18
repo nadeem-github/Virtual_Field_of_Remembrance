@@ -1,7 +1,6 @@
 <section class="py-5" id="draggable-section" [ngClass]="{ dragging: isDragging, noselect: isDragging }" [ngStyle]="{
   backgroundImage: 'url(/assets/images/drag_bg.jpg)',
   backgroundPosition: backgroundPositionX + 'px ' + backgroundPositionY + 'px',
-  backgroundRepeat: 'no-repeat',
   backgroundSize: 'cover'
 }" (mousedown)="onMouseDown($event)" (mousemove)="onMouseMove($event)" (mouseup)="onMouseUp()"
     (mouseleave)="onMouseUp()" (touchstart)="onTouchStart($event)" (touchmove)="onTouchMove($event)"
