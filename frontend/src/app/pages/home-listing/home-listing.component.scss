@@ -2,7 +2,6 @@ section {
     position: relative;
     width: 100%;
     height: 100vh;
-    overflow: hidden;
     cursor: grab;
     background: #7f9f34;
 
@@ -14,6 +13,39 @@ section {
         cursor: grabbing;
     }
 }
+
+#draggable-section {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    cursor: grab;
+
+    &.dragging {
+        cursor: grabbing;
+    }
+
+    .draggable-grid {
+        position: absolute;
+        width: 130%;
+
+        @media (max-width: 500px) {
+            width: 200%;
+        }
+    }
+
+    .remembrance-item {
+        width: 100px;
+        height: 100px;
+        position: relative;
+
+        @media (max-width: 500px) {
+            width: 75px;
+            height: 85px;
+        }
+    }
+}
+
 
 .noselect {
     user-select: none;
@@ -28,6 +60,10 @@ section {
     transition: transform 0.3s ease-in-out;
     transform: scaleY(0.7); // 1 is normal, 0.8 is slightly flattened
     transform-origin: center;
+
+    @media (max-width: 500px) {
+        width: 40px;
+    }
 }
 
 .remembrance-img:hover {
@@ -36,7 +72,7 @@ section {
 
 .remembrance-details {
     position: absolute;
-    top: 100%;
+    top: 90%;
     left: 50%;
     transform: translateX(-50%);
     background-color: rgba(0, 0, 0, 0.9);
@@ -54,16 +90,16 @@ section {
         border-right: 10px solid transparent;
         border-bottom: 10px solid rgba(0, 0, 0, 0.9);
 
-        @media (max-width: 500px) {
-            display: none;
-        }
+        // @media (max-width: 500px) {
+        //     display: none;
+        // }
     }
 
     @media (max-width: 500px) {
-        position: fixed;
-        width: 90vw;
-        top: 40%;
-        left: 50%;
+        // position: fixed;
+        width: 65vw;
+        top: 90%;
+        left: 49.5%;
         transform: translateX(-50%);
         font-size: 14px;
         padding: 1rem;
