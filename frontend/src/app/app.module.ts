@@ -13,6 +13,7 @@ import { DonateNowComponent } from './pages/donate-now/donate-now.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BuyWoodenCrossComponent } from './pages/buy-wooden-cross/buy-wooden-cross.component';
+import { DraggableComponent } from './pages/draggable/draggable.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { BuyWoodenCrossComponent } from './pages/buy-wooden-cross/buy-wooden-cro
     AddFormComponent,
     EditFormComponent,
     DonateNowComponent,
-    BuyWoodenCrossComponent
+    BuyWoodenCrossComponent,
+    DraggableComponent
   ],
   imports: [
     BrowserModule,

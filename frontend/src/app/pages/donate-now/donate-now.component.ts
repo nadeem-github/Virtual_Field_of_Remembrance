@@ -6,6 +6,8 @@ import { Component, Renderer2 } from '@angular/core';
   styleUrls: ['./donate-now.component.scss']
 })
 export class DonateNowComponent {
+
+  isLoading = true;
   constructor(private renderer: Renderer2) {}
 
   ngAfterViewInit(): void {

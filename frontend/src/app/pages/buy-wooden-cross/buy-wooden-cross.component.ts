@@ -6,6 +6,8 @@ import { Component, Renderer2 } from '@angular/core';
   styleUrls: ['./buy-wooden-cross.component.scss']
 })
 export class BuyWoodenCrossComponent {
+
+  isLoading = true;
   constructor(private renderer: Renderer2) { }
 
   ngAfterViewInit(): void {
