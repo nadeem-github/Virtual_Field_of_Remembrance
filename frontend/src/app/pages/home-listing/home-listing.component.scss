@@ -27,7 +27,12 @@ section {
 
     .draggable-grid {
         position: absolute;
-        width: 130%;
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        max-width: 1300px; // 12 items x 100px = 1200px (approximate)
+        margin: 0 auto;
+        justify-content: center;
 
         @media (max-width: 500px) {
             width: 200%;
@@ -58,7 +63,7 @@ section {
     cursor: pointer;
     width: 50px;
     transition: transform 0.3s ease-in-out;
-    transform: scaleY(0.7); // 1 is normal, 0.8 is slightly flattened
+    transform: scaleY(0.7);
     transform-origin: center;
 
     @media (max-width: 500px) {

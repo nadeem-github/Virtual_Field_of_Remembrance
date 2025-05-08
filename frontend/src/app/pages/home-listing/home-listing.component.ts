@@ -11,9 +11,8 @@ export class HomeListingComponent {
 
   isLoading = true;
   remembrances: any[] = [];
-  // baseURL = 'http://localhost:8002/storage/images/';
-  baseURL = 'https://api.familiesofveterans.org.au/storage/images/';
-  // https://api.familiesofveterans.org.au/api/admin/fetch-remebrance
+  baseURL = 'http://localhost:8002/storage/images/';
+  // baseURL = 'https://api.familiesofveterans.org.au/storage/images/';
   selectedRemembrance: any = null;
 
   constructor(
@@ -24,6 +23,22 @@ export class HomeListingComponent {
 
   ngOnInit(): void {
     this.fetchRemembrances();
+    this.setInitialPositions();
+  }
+
+  setInitialPositions() {
+    const bgWidth = 3000;
+    const bgHeight = 3000;
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+
+    // Center background image
+    this.backgroundPositionX = -(bgWidth - screenWidth) / 2;
+    this.backgroundPositionY = -(bgHeight - screenHeight) / 2;
+
+    // Center content grid
+    this.contentPositionX = 0;
+    this.contentPositionY = 0;
   }
 
   fetchRemembrances(): void {
@@ -103,26 +118,101 @@ export class HomeListingComponent {
     this.velocityX = deltaX;
     this.velocityY = deltaY;
 
-    this.backgroundPositionX = currentX - this.startX;
-    this.backgroundPositionY = currentY - this.startY;
-    this.contentPositionX = currentX - this.startContentX;
-    this.contentPositionY = currentY - this.startContentY;
+    let newBackgroundX = currentX - this.startX;
+    let newBackgroundY = currentY - this.startY;
+    let newContentX = currentX - this.startContentX;
+    let newContentY = currentY - this.startContentY;
+
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+
+    const bgWidth = 3000;
+    const bgHeight = 3000;
+
+    const buffer = 100; // spacing buffer (equal chaaro side)
+
+    // X axis limit
+    const maxLeft = buffer;
+    const maxRight = -(bgWidth - screenWidth) - buffer;
+
+    if (newBackgroundX > maxLeft) {
+      newBackgroundX = maxLeft;
+      newContentX = this.contentPositionX;
+    }
+    if (newBackgroundX < maxRight) {
+      newBackgroundX = maxRight;
+      newContentX = this.contentPositionX;
+    }
+
+    // Y axis limit
+    const maxTop = buffer;
+    const maxBottom = -(bgHeight - screenHeight) - buffer;
+
+    if (newBackgroundY > maxTop) {
+      newBackgroundY = maxTop;
+      newContentY = this.contentPositionY;
+    }
+    if (newBackgroundY < maxBottom) {
+      newBackgroundY = maxBottom;
+      newContentY = this.contentPositionY;
+    }
+
+    this.backgroundPositionX = newBackgroundX;
+    this.backgroundPositionY = newBackgroundY;
+
+    this.contentPositionX = newContentX;
+    this.contentPositionY = newContentY;
 
     this.checkForMoreData();
   }
 
+
   startMomentumScroll() {
     const friction = 0.95;
+    const buffer = 100; // same buffer
+    const maxDragX = 3000 - window.innerWidth;
+    const maxDragY = 3000 - window.innerHeight;
+
     const step = () => {
       this.velocityX *= friction;
       this.velocityY *= friction;
 
       if (Math.abs(this.velocityX) < 0.5 && Math.abs(this.velocityY) < 0.5) return;
 
-      this.contentPositionX += this.velocityX;
-      this.contentPositionY += this.velocityY;
-      this.backgroundPositionX += this.velocityX;
-      this.backgroundPositionY += this.velocityY;
+      let newContentX = this.contentPositionX + this.velocityX;
+      let newContentY = this.contentPositionY + this.velocityY;
+      let newBackgroundX = this.backgroundPositionX + this.velocityX;
+      let newBackgroundY = this.backgroundPositionY + this.velocityY;
+
+      // X axis limit
+      if (newBackgroundX > buffer) {
+        newBackgroundX = buffer;
+        newContentX = this.contentPositionX;
+        this.velocityX = 0;
+      }
+      if (newBackgroundX < -maxDragX - buffer) {
+        newBackgroundX = -maxDragX - buffer;
+        newContentX = this.contentPositionX;
+        this.velocityX = 0;
+      }
+
+      // Y axis limit
+      if (newBackgroundY > buffer) {
+        newBackgroundY = buffer;
+        newContentY = this.contentPositionY;
+        this.velocityY = 0;
+      }
+      if (newBackgroundY < -maxDragY - buffer) {
+        newBackgroundY = -maxDragY - buffer;
+        newContentY = this.contentPositionY;
+        this.velocityY = 0;
+      }
+
+      this.backgroundPositionX = newBackgroundX;
+      this.backgroundPositionY = newBackgroundY;
+
+      this.contentPositionX = newContentX;
+      this.contentPositionY = newContentY;
 
       this.checkForMoreData();
       this.momentumFrame = requestAnimationFrame(step);
