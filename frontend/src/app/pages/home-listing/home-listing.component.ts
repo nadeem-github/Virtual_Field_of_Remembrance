@@ -11,8 +11,8 @@ export class HomeListingComponent {
 
   isLoading = true;
   remembrances: any[] = [];
-  baseURL = 'http://localhost:8002/storage/images/';
-  // baseURL = 'https://api.familiesofveterans.org.au/storage/images/';
+  // baseURL = 'http://localhost:8002/storage/images/';
+  baseURL = 'https://api.familiesofveterans.org.au/storage/images/';
   selectedRemembrance: any = null;
 
   constructor(
