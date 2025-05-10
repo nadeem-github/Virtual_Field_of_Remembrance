@@ -34,7 +34,7 @@ export class HomeListingComponent {
 
   getBgDimensions() {
     if (window.innerWidth < 768) {
-      return { bgWidth: 1500, bgHeight: 2000 }; // Mobile view
+      return { bgWidth: 1400, bgHeight: 1800 }; // Mobile view
     }
     return { bgWidth: 3000, bgHeight: 3000 }; // Desktop view
   }

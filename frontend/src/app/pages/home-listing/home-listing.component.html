@@ -1,16 +1,17 @@
 <!-- Loader Spinner -->
 <div *ngIf="isLoading" class="spinner-overlay">
-  <div class="spinner"></div>
+    <div class="spinner"></div>
 </div>
 
 <section class="py-4" id="draggable-section" [ngClass]="{ dragging: isDragging, noselect: isDragging }" [ngStyle]="{
     backgroundImage: 'url(assets/images/drag_bg.jpg)',
     backgroundPosition: backgroundPositionX + 'px ' + backgroundPositionY + 'px',
-    backgroundSize: 'cover'
+    backgroundSize: '4000px 3000px',
+    backgroundRepeat: 'repeat'
   }" (mousedown)="onMouseDown($event)" (mousemove)="onMouseMove($event)" (mouseup)="onMouseUp()"
     (mouseleave)="onMouseUp()" (touchstart)="onTouchStart($event)" (touchmove)="onTouchMove($event)"
     (touchend)="onTouchEnd()">
-    <div class="container position-relative" style="height: 100vh; width: 100vw;">
+    <div class="container position-relative full-container">
         <div class="draggable-grid d-flex align-items-center flex-wrap text-center" [ngStyle]="{
         transform: 'translate(' + contentPositionX + 'px, ' + contentPositionY + 'px)',
         transition: isDragging ? 'none' : 'transform 0.3s ease'
