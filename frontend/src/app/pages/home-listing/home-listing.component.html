@@ -1,3 +1,8 @@
+<!-- Loader Spinner -->
+<div *ngIf="isLoading" class="spinner-overlay">
+  <div class="spinner"></div>
+</div>
+
 <section class="py-4" id="draggable-section" [ngClass]="{ dragging: isDragging, noselect: isDragging }" [ngStyle]="{
     backgroundImage: 'url(assets/images/drag_bg.jpg)',
     backgroundPosition: backgroundPositionX + 'px ' + backgroundPositionY + 'px',

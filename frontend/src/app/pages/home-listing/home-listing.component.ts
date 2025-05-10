@@ -24,19 +24,33 @@ export class HomeListingComponent {
   ngOnInit(): void {
     this.fetchRemembrances();
     this.setInitialPositions();
+    window.addEventListener('resize', this.setInitialPositions.bind(this));
+  }
+
+  ngOnDestroy(): void {
+    window.removeEventListener('resize', this.setInitialPositions.bind(this));
+    this.cancelMomentum();
+  }
+
+  getBgDimensions() {
+    if (window.innerWidth < 768) {
+      return { bgWidth: 1500, bgHeight: 2000 }; // Mobile view
+    }
+    return { bgWidth: 3000, bgHeight: 3000 }; // Desktop view
+  }
+
+  getBuffer() {
+    return window.innerWidth < 768 ? 50 : 80; // Mobile: 50px, Desktop: 100px
   }
 
   setInitialPositions() {
-    const bgWidth = 3000;
-    const bgHeight = 3000;
+    const { width: bgWidth, height: bgHeight } = this.getBgSize();
     const screenWidth = window.innerWidth;
     const screenHeight = window.innerHeight;
 
-    // Center background image
     this.backgroundPositionX = -(bgWidth - screenWidth) / 2;
     this.backgroundPositionY = -(bgHeight - screenHeight) / 2;
 
-    // Center content grid
     this.contentPositionX = 0;
     this.contentPositionY = 0;
   }
@@ -44,7 +58,13 @@ export class HomeListingComponent {
   fetchRemembrances(): void {
     this.virtualFielsService.getRemembrances({}).subscribe(res => {
       if (res.success) this.remembrances = res.data;
+      this.isLoading = false; // ✅ Fixed
     });
+  }
+
+  getBgSize() {
+    const isMobile = window.innerWidth < 768;
+    return isMobile ? { width: 1000, height: 1000 } : { width: 3000, height: 3000 };
   }
 
   // Drag State
@@ -64,6 +84,9 @@ export class HomeListingComponent {
   lastX = 0;
   lastY = 0;
   momentumFrame: any;
+
+  dragThreshold = 5; // ✅ Minimal movement to trigger drag
+  dragStarted = false;
 
   onMouseDown(event: MouseEvent) {
     this.cancelMomentum();
@@ -125,11 +148,9 @@ export class HomeListingComponent {
 
     const screenWidth = window.innerWidth;
     const screenHeight = window.innerHeight;
+    const { bgWidth, bgHeight } = this.getBgDimensions();
 
-    const bgWidth = 3000;
-    const bgHeight = 3000;
-
-    const buffer = 100; // spacing buffer (equal chaaro side)
+    const buffer = this.getBuffer();
 
     // X axis limit
     const maxLeft = buffer;
@@ -166,12 +187,12 @@ export class HomeListingComponent {
     this.checkForMoreData();
   }
 
-
   startMomentumScroll() {
     const friction = 0.95;
-    const buffer = 100; // same buffer
-    const maxDragX = 3000 - window.innerWidth;
-    const maxDragY = 3000 - window.innerHeight;
+    const { bgWidth, bgHeight } = this.getBgDimensions();
+    const maxDragX = bgWidth - window.innerWidth;
+    const maxDragY = bgHeight - window.innerHeight;
+    const buffer = this.getBuffer();
 
     const step = () => {
       this.velocityX *= friction;
@@ -234,11 +255,6 @@ export class HomeListingComponent {
   }
 
   loadMoreData(direction: 'left' | 'right' | 'up' | 'down') {
-    // Add pagination or filtering logic if needed
-    // Example call:
-    // this.virtualFielsService.getRemembrances({ direction }).subscribe(res => {
-    //   if (res.success) this.remembrances.push(...res.data);
-    // });
+    // API call ya data load logic yahan implement karo bhai
   }
-
 }

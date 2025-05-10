@@ -8,8 +8,8 @@ import { BuyWoodenCrossComponent } from './pages/buy-wooden-cross/buy-wooden-cro
 import { DraggableComponent } from './pages/draggable/draggable.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full', },
-  { path: 'home', component: HomeListingComponent },
+  { path: '', redirectTo: '', pathMatch: 'full', },
+  { path: '', component: HomeListingComponent },
   { path: 'addNew', component: AddFormComponent },
   { path: 'edit', component: EditFormComponent },
   { path: 'donateNow', component: DonateNowComponent },
