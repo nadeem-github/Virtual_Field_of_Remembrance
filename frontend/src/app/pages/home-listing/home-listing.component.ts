@@ -138,13 +138,16 @@ export class HomeListingComponent {
     this.lastX = currentX;
     this.lastY = currentY;
 
-    this.velocityX = deltaX;
-    this.velocityY = deltaY;
+    // ✅ Apply damping on mobile for smooth drag
+    const isMobile = window.innerWidth < 768;
+    const dampingFactor = isMobile ? 0.4 : 1; // Mobile me movement ko 40% kar diya
+    this.velocityX = deltaX * dampingFactor;
+    this.velocityY = deltaY * dampingFactor;
 
-    let newBackgroundX = currentX - this.startX;
-    let newBackgroundY = currentY - this.startY;
-    let newContentX = currentX - this.startContentX;
-    let newContentY = currentY - this.startContentY;
+    let newBackgroundX = this.backgroundPositionX + this.velocityX;
+    let newBackgroundY = this.backgroundPositionY + this.velocityY;
+    let newContentX = this.contentPositionX + this.velocityX;
+    let newContentY = this.contentPositionY + this.velocityY;
 
     const screenWidth = window.innerWidth;
     const screenHeight = window.innerHeight;
@@ -186,6 +189,7 @@ export class HomeListingComponent {
 
     this.checkForMoreData();
   }
+
 
   startMomentumScroll() {
     const friction = 0.95;
