@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { VirtualFieldAPIsService } from 'src/app/virtual-field-apis.service';
 
 @Component({
@@ -9,256 +8,224 @@ import { VirtualFieldAPIsService } from 'src/app/virtual-field-apis.service';
 })
 export class HomeListingComponent {
 
-  isLoading = true;
+  isDragging = false;
+  lastX = 0;
+  lastY = 0;
+  offsetX = 0;
+  offsetY = 0;
+  velocityX = 0;
+  velocityY = 0;
+  zoomLevel = 1;
+
+  bgWidth = 4000;
+  bgHeight = 3000;
+
   remembrances: any[] = [];
+  remembranceRows: any[][] = [];
+  selectedRemembrance: any = null;
   // baseURL = 'http://localhost:8002/storage/images/';
   baseURL = 'https://api.familiesofveterans.org.au/storage/images/';
-  selectedRemembrance: any = null;
 
-  constructor(
-    private virtualFielsService: VirtualFieldAPIsService,
-    private route: ActivatedRoute,
-    private router: Router,
-  ) { }
+  constructor(private virtualFielsService: VirtualFieldAPIsService) { }
 
   ngOnInit(): void {
-    this.fetchRemembrances();
-    this.setInitialPositions();
-    window.addEventListener('resize', this.setInitialPositions.bind(this));
-  }
-
-  ngOnDestroy(): void {
-    window.removeEventListener('resize', this.setInitialPositions.bind(this));
-    this.cancelMomentum();
-  }
-
-  getBgDimensions() {
-    if (window.innerWidth < 768) {
-      return { bgWidth: 1400, bgHeight: 1800 }; // Mobile view
-    }
-    return { bgWidth: 3000, bgHeight: 3000 }; // Desktop view
-  }
-
-  getBuffer() {
-    return window.innerWidth < 768 ? 50 : 80; // Mobile: 50px, Desktop: 100px
-  }
-
-  setInitialPositions() {
-    const { width: bgWidth, height: bgHeight } = this.getBgSize();
     const screenWidth = window.innerWidth;
-    const screenHeight = window.innerHeight;
 
-    this.backgroundPositionX = -(bgWidth - screenWidth) / 2;
-    this.backgroundPositionY = -(bgHeight - screenHeight) / 2;
+    if (screenWidth <= 500) {
+      this.bgWidth = 1000;  // e.g., 5 items * 100px width + spacing
+      this.bgHeight = 3000;
+    } else {
+      this.bgWidth = 4000;
+      this.bgHeight = 3000;
+    }
 
-    this.contentPositionX = 0;
-    this.contentPositionY = 0;
+    this.fetchRemembrances();
+
+    const viewW = window.innerWidth;
+    const viewH = window.innerHeight;
+    this.offsetX = (viewW - this.bgWidth) / 2;
+    this.offsetY = (viewH - this.bgHeight) / 2;
+
+    requestAnimationFrame(this.animateDrag.bind(this));
   }
+
 
   fetchRemembrances(): void {
-    this.virtualFielsService.getRemembrances({}).subscribe(res => {
-      if (res.success) this.remembrances = res.data;
-      this.isLoading = false; // ✅ Fixed
+    this.virtualFielsService.getRemembrances({}).subscribe((res) => {
+      if (res.success) {
+        this.remembrances = res.data;
+        this.chunkRemembrances();
+      }
     });
   }
 
-  getBgSize() {
-    const isMobile = window.innerWidth < 768;
-    return isMobile ? { width: 1000, height: 1000 } : { width: 3000, height: 3000 };
+  chunkRemembrances(): void {
+    const screenWidth = window.innerWidth;
+    const size = screenWidth <= 500 ? 5 : 12;
+
+    this.remembranceRows = [];
+    for (let i = 0; i < this.remembrances.length; i += size) {
+      this.remembranceRows.push(this.remembrances.slice(i, i + size));
+    }
   }
 
-  // Drag State
-  isDragging = false;
-  backgroundPositionX = 0;
-  backgroundPositionY = 0;
-  contentPositionX = 0;
-  contentPositionY = 0;
 
-  startX = 0;
-  startY = 0;
-  startContentX = 0;
-  startContentY = 0;
-
-  velocityX = 0;
-  velocityY = 0;
-  lastX = 0;
-  lastY = 0;
-  momentumFrame: any;
-
-  dragThreshold = 5; // ✅ Minimal movement to trigger drag
-  dragStarted = false;
-
-  onMouseDown(event: MouseEvent) {
-    this.cancelMomentum();
+  startDrag(event: MouseEvent | Touch): void {
     this.isDragging = true;
-    this.startX = event.clientX - this.backgroundPositionX;
-    this.startY = event.clientY - this.backgroundPositionY;
-    this.startContentX = event.clientX - this.contentPositionX;
-    this.startContentY = event.clientY - this.contentPositionY;
     this.lastX = event.clientX;
     this.lastY = event.clientY;
   }
 
-  onMouseMove(event: MouseEvent) {
+  onDrag(event: MouseEvent | Touch): void {
     if (!this.isDragging) return;
-    this.updatePositions(event.clientX, event.clientY);
+
+    const dx = event.clientX - this.lastX;
+    const dy = event.clientY - this.lastY;
+
+    // For mobile, optionally increase drag distance slightly
+    const isTouch = 'TouchEvent' in window && event instanceof Touch;
+    const ratio = isTouch ? 1.2 : 1; // slightly more sensitive on touch
+
+    this.offsetX += dx * ratio;
+    this.offsetY += dy * ratio;
+
+    this.velocityX = dx * ratio;
+    this.velocityY = dy * ratio;
+
+    this.clampOffsets();
+
+    this.lastX = event.clientX;
+    this.lastY = event.clientY;
   }
 
-  onMouseUp() {
+
+  endDrag(): void {
     this.isDragging = false;
-    this.startMomentumScroll();
   }
 
-  onTouchStart(event: TouchEvent) {
-    this.cancelMomentum();
-    const touch = event.touches[0];
-    this.isDragging = true;
-    this.startX = touch.clientX - this.backgroundPositionX;
-    this.startY = touch.clientY - this.backgroundPositionY;
-    this.startContentX = touch.clientX - this.contentPositionX;
-    this.startContentY = touch.clientY - this.contentPositionY;
-    this.lastX = touch.clientX;
-    this.lastY = touch.clientY;
-  }
+  animateDrag(): void {
+    if (!this.isDragging) {
+      this.offsetX += this.velocityX;
+      this.offsetY += this.velocityY;
 
-  onTouchMove(event: TouchEvent) {
-    if (!this.isDragging) return;
-    const touch = event.touches[0];
-    this.updatePositions(touch.clientX, touch.clientY);
-  }
+      this.velocityX *= 0.9;
+      this.velocityY *= 0.9;
 
-  onTouchEnd() {
-    this.isDragging = false;
-    this.startMomentumScroll();
-  }
-
-  updatePositions(currentX: number, currentY: number) {
-    const deltaX = currentX - this.lastX;
-    const deltaY = currentY - this.lastY;
-    this.lastX = currentX;
-    this.lastY = currentY;
-
-    // ✅ Apply damping on mobile for smooth drag
-    const isMobile = window.innerWidth < 768;
-    const dampingFactor = isMobile ? 0.4 : 1; // Mobile me movement ko 40% kar diya
-    this.velocityX = deltaX * dampingFactor;
-    this.velocityY = deltaY * dampingFactor;
-
-    let newBackgroundX = this.backgroundPositionX + this.velocityX;
-    let newBackgroundY = this.backgroundPositionY + this.velocityY;
-    let newContentX = this.contentPositionX + this.velocityX;
-    let newContentY = this.contentPositionY + this.velocityY;
-
-    const screenWidth = window.innerWidth;
-    const screenHeight = window.innerHeight;
-    const { bgWidth, bgHeight } = this.getBgDimensions();
-
-    const buffer = this.getBuffer();
-
-    // X axis limit
-    const maxLeft = buffer;
-    const maxRight = -(bgWidth - screenWidth) - buffer;
-
-    if (newBackgroundX > maxLeft) {
-      newBackgroundX = maxLeft;
-      newContentX = this.contentPositionX;
-    }
-    if (newBackgroundX < maxRight) {
-      newBackgroundX = maxRight;
-      newContentX = this.contentPositionX;
+      this.clampOffsets();
     }
 
-    // Y axis limit
-    const maxTop = buffer;
-    const maxBottom = -(bgHeight - screenHeight) - buffer;
-
-    if (newBackgroundY > maxTop) {
-      newBackgroundY = maxTop;
-      newContentY = this.contentPositionY;
-    }
-    if (newBackgroundY < maxBottom) {
-      newBackgroundY = maxBottom;
-      newContentY = this.contentPositionY;
-    }
-
-    this.backgroundPositionX = newBackgroundX;
-    this.backgroundPositionY = newBackgroundY;
-
-    this.contentPositionX = newContentX;
-    this.contentPositionY = newContentY;
-
-    this.checkForMoreData();
+    requestAnimationFrame(this.animateDrag.bind(this));
   }
 
+  clampOffsets(): void {
+    const viewW = window.innerWidth;
+    const viewH = window.innerHeight;
 
-  startMomentumScroll() {
-    const friction = 0.95;
-    const { bgWidth, bgHeight } = this.getBgDimensions();
-    const maxDragX = bgWidth - window.innerWidth;
-    const maxDragY = bgHeight - window.innerHeight;
-    const buffer = this.getBuffer();
+    const contentW = this.bgWidth * this.zoomLevel;
+    const contentH = this.bgHeight * this.zoomLevel;
 
-    const step = () => {
-      this.velocityX *= friction;
-      this.velocityY *= friction;
+    const minX = viewW - contentW;
+    const minY = viewH - contentH;
 
-      if (Math.abs(this.velocityX) < 0.5 && Math.abs(this.velocityY) < 0.5) return;
+    this.offsetX = Math.min(0, Math.max(minX, this.offsetX));
+    this.offsetY = Math.min(0, Math.max(minY, this.offsetY));
+  }
 
-      let newContentX = this.contentPositionX + this.velocityX;
-      let newContentY = this.contentPositionY + this.velocityY;
-      let newBackgroundX = this.backgroundPositionX + this.velocityX;
-      let newBackgroundY = this.backgroundPositionY + this.velocityY;
+  dragByDirection(direction: 'up' | 'down' | 'left' | 'right'): void {
+    const dragAmount = 100;
+    let targetX = this.offsetX;
+    let targetY = this.offsetY;
 
-      // X axis limit
-      if (newBackgroundX > buffer) {
-        newBackgroundX = buffer;
-        newContentX = this.contentPositionX;
-        this.velocityX = 0;
+    switch (direction) {
+      case 'up':
+        targetY += dragAmount;
+        break;
+      case 'down':
+        targetY -= dragAmount;
+        break;
+      case 'left':
+        targetX += dragAmount;
+        break;
+      case 'right':
+        targetX -= dragAmount;
+        break;
+    }
+
+    // Clamp target positions
+    const viewW = window.innerWidth;
+    const viewH = window.innerHeight;
+    const minX = viewW - this.bgWidth * this.zoomLevel;
+    const minY = viewH - this.bgHeight * this.zoomLevel;
+
+    targetX = Math.min(0, Math.max(minX, targetX));
+    targetY = Math.min(0, Math.max(minY, targetY));
+
+    this.animateToPosition(targetX, targetY);
+  }
+
+  animateToPosition(targetX: number, targetY: number): void {
+    const steps = 15;
+    let currentStep = 0;
+    const startX = this.offsetX;
+    const startY = this.offsetY;
+    const deltaX = (targetX - startX) / steps;
+    const deltaY = (targetY - startY) / steps;
+
+    const animate = () => {
+      if (currentStep < steps) {
+        this.offsetX += deltaX;
+        this.offsetY += deltaY;
+        currentStep++;
+        requestAnimationFrame(animate);
+      } else {
+        this.offsetX = targetX;
+        this.offsetY = targetY;
       }
-      if (newBackgroundX < -maxDragX - buffer) {
-        newBackgroundX = -maxDragX - buffer;
-        newContentX = this.contentPositionX;
-        this.velocityX = 0;
-      }
-
-      // Y axis limit
-      if (newBackgroundY > buffer) {
-        newBackgroundY = buffer;
-        newContentY = this.contentPositionY;
-        this.velocityY = 0;
-      }
-      if (newBackgroundY < -maxDragY - buffer) {
-        newBackgroundY = -maxDragY - buffer;
-        newContentY = this.contentPositionY;
-        this.velocityY = 0;
-      }
-
-      this.backgroundPositionX = newBackgroundX;
-      this.backgroundPositionY = newBackgroundY;
-
-      this.contentPositionX = newContentX;
-      this.contentPositionY = newContentY;
-
-      this.checkForMoreData();
-      this.momentumFrame = requestAnimationFrame(step);
     };
 
-    this.momentumFrame = requestAnimationFrame(step);
+    animate();
   }
 
-  cancelMomentum() {
-    if (this.momentumFrame) cancelAnimationFrame(this.momentumFrame);
+  canDrag(direction: 'up' | 'down' | 'left' | 'right'): boolean {
+    const viewW = window.innerWidth;
+    const viewH = window.innerHeight;
+    const minX = viewW - this.bgWidth * this.zoomLevel;
+    const minY = viewH - this.bgHeight * this.zoomLevel;
+
+    switch (direction) {
+      case 'up':
+        return this.offsetY < 0;
+      case 'down':
+        return this.offsetY > minY;
+      case 'left':
+        return this.offsetX < 0;
+      case 'right':
+        return this.offsetX > minX;
+      default:
+        return false;
+    }
   }
 
-  checkForMoreData() {
-    const threshold = 200;
-    if (this.contentPositionX > threshold) this.loadMoreData('left');
-    else if (this.contentPositionX < -threshold) this.loadMoreData('right');
-    if (this.contentPositionY > threshold) this.loadMoreData('up');
-    else if (this.contentPositionY < -threshold) this.loadMoreData('down');
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      const viewW = window.innerWidth;
+      const viewH = window.innerHeight;
+      const bgW = this.bgWidth;
+      const bgH = this.bgHeight;
+
+      this.offsetX = (viewW - bgW) / 2;
+      this.offsetY = (viewH - bgH) / 2;
+    });
+
+    // Prevent browser scrolling on mobile touchmove
+    const dragEl = document.querySelector('.mainDrag');
+    if (dragEl) {
+      dragEl.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
+    }
   }
 
-  loadMoreData(direction: 'left' | 'right' | 'up' | 'down') {
-    // API call ya data load logic yahan implement karo bhai
-  }
+
+
+
+
 }

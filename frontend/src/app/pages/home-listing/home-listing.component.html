@@ -1,28 +1,24 @@
-<!-- Loader Spinner -->
-<div *ngIf="isLoading" class="spinner-overlay">
-    <div class="spinner"></div>
-</div>
-
-<section class="py-4" id="draggable-section" [ngClass]="{ dragging: isDragging, noselect: isDragging }" [ngStyle]="{
-    backgroundImage: 'url(assets/images/drag_bg.jpg)',
-    backgroundPosition: backgroundPositionX + 'px ' + backgroundPositionY + 'px',
-    backgroundSize: '4000px 3000px',
-    backgroundRepeat: 'repeat'
-  }" (mousedown)="onMouseDown($event)" (mousemove)="onMouseMove($event)" (mouseup)="onMouseUp()"
-    (mouseleave)="onMouseUp()" (touchstart)="onTouchStart($event)" (touchmove)="onTouchMove($event)"
-    (touchend)="onTouchEnd()">
-    <div class="container position-relative full-container">
-        <div class="draggable-grid d-flex align-items-center flex-wrap text-center" [ngStyle]="{
-        transform: 'translate(' + contentPositionX + 'px, ' + contentPositionY + 'px)',
-        transition: isDragging ? 'none' : 'transform 0.3s ease'
-      }">
-            <div class="remembrance-item" *ngFor="let remembrance of remembrances"
+<section class="mainDrag" (mousedown)="startDrag($event)" (mousemove)="onDrag($event)" (mouseup)="endDrag()"
+    (mouseleave)="endDrag()" (touchstart)="startDrag($event.touches[0])" (touchmove)="onDrag($event.touches[0])"
+    (touchend)="endDrag()">
+    <div class="draggable-container text-center" [ngStyle]="{
+      width: bgWidth + 'px',
+      height: bgHeight + 'px',
+      transform:
+        'translate(' +
+        offsetX +
+        'px,' +
+        offsetY +
+        'px) scale(' +
+        zoomLevel +
+        ')'
+    }">
+        <div *ngFor="let row of remembranceRows" class="d-flex justify-content-center flex-wrap">
+            <div class="remembrance-item" *ngFor="let remembrance of row"
                 (mouseenter)="selectedRemembrance = remembrance" (mouseleave)="selectedRemembrance = null">
-                <img *ngIf="remembrance.rem_symbol" [src]="baseURL + remembrance.rem_symbol"
-                    [alt]="remembrance.rem_symbol" class="remembrance-img" />
-
+                <img *ngIf="remembrance.rem_symbol" [src]="baseURL + remembrance.rem_symbol" class="remembrance-img" />
                 <div *ngIf="selectedRemembrance === remembrance"
-                    class="remembrance-details text-white p-3 rounded shadow z-3 text-start">
+                    class="remembrance-details position-absolute text-white p-3 rounded shadow z-3 text-start">
                     <p class="mb-1">In memory of <b class="text-uppercase">{{ remembrance.tribute_memory }}</b></p>
                     <p class="mb-2">{{ remembrance.tribute_message }}</p>
                     <p class="mb-0">Submitted by: {{ remembrance.first_name }} {{ remembrance.last_name }}</p>
@@ -31,3 +27,23 @@
         </div>
     </div>
 </section>
+
+<div class="drag-controls position-fixed">
+    <button class="btn btn-dark btn-sm" (click)="dragByDirection('up')" [disabled]="!canDrag('up')">
+        <i class="fa fa-arrow-up"></i>
+    </button>
+
+    <div class="d-flex justify-content-between mt-1">
+        <button class="btn btn-dark btn-sm me-1" (click)="dragByDirection('left')" [disabled]="!canDrag('left')">
+            <i class="fa fa-arrow-left"></i>
+        </button>
+
+        <button class="btn btn-dark btn-sm ms-1" (click)="dragByDirection('right')" [disabled]="!canDrag('right')">
+            <i class="fa fa-arrow-right"></i>
+        </button>
+    </div>
+
+    <button class="btn btn-dark btn-sm mt-1" (click)="dragByDirection('down')" [disabled]="!canDrag('down')">
+        <i class="fa fa-arrow-down"></i>
+    </button>
+</div>

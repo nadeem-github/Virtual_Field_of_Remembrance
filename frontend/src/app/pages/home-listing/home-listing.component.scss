@@ -1,152 +1,125 @@
-section {
-    position: relative;
+.mainDrag {
     width: 100%;
-    height: 100vh;
+    height: 90vh;
+    overflow: hidden;
+    position: relative;
     cursor: grab;
-    background: #7CA235;
+    touch-action: none;
+    background-color: #000;
 
-    &.dragging {
-        cursor: grabbing;
-    }
+    user-select: none;
+    -webkit-user-drag: none;
+    touch-action: none;
 
     @media (max-width: 500px) {
-        height: 100vh;
-    }
-}
-
-#draggable-section {
-    position: relative;
-    height: 100vh;
-    width: 100%;
-    overflow: hidden;
-    cursor: grab;
-    background-repeat: no-repeat;
-    background-size: 100% 100%; // Updated to ensure background stretches properly
-    background-position: center;
-
-    &.dragging {
-        cursor: grabbing;
+        .mainDrag {
+            cursor: default; // Grab cursor not needed on touch
+        }
     }
 
-    .full-container {
-        height: 100vh;
-        width: 100vw;
-    }
-
-    .draggable-grid {
+    .draggable-container {
+        transition: transform 0.2s ease-out;
         position: absolute;
+        top: 0;
+        left: 0;
+        transform-origin: top left;
+        background-image: url("../../../assets/images/drag_bg.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
         display: flex;
-        flex-wrap: wrap;
-        width: 100%;
-        max-width: 1300px;
-        margin: 0 auto;
+        flex-direction: column;
+        align-items: center;
         justify-content: center;
+        pointer-events: none;
 
-        // @media (max-width: 500px) {
-        //     width: 200%;
-        // }
+        @media (max-width: 768px) {
+            background-size: contain;
+            background-repeat: round;
+        }
     }
 
     .remembrance-item {
         width: 100px;
         height: 100px;
+        display: inline-block;
         position: relative;
+        pointer-events: auto;
 
-        @media (max-width: 500px) {
-            width: 75px;
-            height: 85px;
+        @media (max-width: 768px) {
+            width: 80px;
+            height: 80px;
+        }
+
+        .remembrance-img {
+            width: 50px;
+            transform: scaleY(0.6);
+            pointer-events: none;
+            transition: transform 0.3s ease-in-out;
+
+            &:hover {
+                transform: scale(0.8);
+            }
+
+            @media (max-width: 768px) {
+                width: 40px;
+            }
+        }
+    }
+
+    .remembrance-details {
+        top: 90%;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: rgba(0, 0, 0, 0.9);
+        width: 300px;
+        z-index: 3;
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 10px solid rgba(0, 0, 0, 0.9);
+        }
+
+        @media (max-width: 768px) {
+            width: 65vw;
+            font-size: 14px;
+            padding: 1rem;
         }
     }
 }
 
-.noselect {
-    user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    -moz-user-select: none;
-}
-
-.remembrance-img {
-    cursor: pointer;
-    width: 50px;
-    transition: transform 0.3s ease-in-out;
-    transform: scaleY(0.7);
-    transform-origin: center;
-
-    @media (max-width: 500px) {
-        width: 40px;
-    }
-}
-
-.remembrance-img:hover {
-    transform: scale(0.8);
-}
-
-.remembrance-details {
-    position: absolute;
-    top: 90%;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(0, 0, 0, 0.9);
-    width: 300px;
-    margin-top: 10px;
-    z-index: 3;
-
-    &::after {
-        content: "";
-        position: absolute;
-        top: -8px;
-        left: 50%;
-        transform: translateX(-50%);
-        border-left: 10px solid transparent;
-        border-right: 10px solid transparent;
-        border-bottom: 10px solid rgba(0, 0, 0, 0.9);
-    }
-
-    @media (max-width: 500px) {
-        width: 65vw;
-        top: 90%;
-        left: 49.5%;
-        transform: translateX(-50%);
-        font-size: 14px;
-        padding: 1rem;
-    }
-}
-
-/* Spinner Loader */
-.spinner-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.4);
+.drag-controls {
+    bottom: 20px;
+    right: 20px;
+    z-index: 10;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    z-index: 1000;
-}
+    user-select: none;
 
-.spinner {
-    border: 5px solid rgba(255, 255, 255, 0.3);
-    border-top: 5px solid #fff;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: spin 1s linear infinite;
-}
+    button {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
+        @media (max-width: 768px) {
+            width: 32px;
+            height: 32px;
+            font-size: 14px;
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
     }
-
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
-/* Make scroll smoother visually */
-.draggable-grid {
-    transition: transform 0.2s ease-out !important;
 }
